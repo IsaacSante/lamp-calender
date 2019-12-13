@@ -1,0 +1,403 @@
+<!doctype html>
+<html>
+<head>
+
+     <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sun Loop</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
+    <link href='https://fonts.googleapis.com/css?family=Lato' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="simple-calendar.css">
+    <link href="https://fonts.googleapis.com/css?family=Cormorant&display=swap" rel="stylesheet">
+    <script src="scripts/pie.js"></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.9.0/p5.js'></script>
+    <link href='https://fonts.googleapis.com/css?family=Alegreya&display=swap' rel='stylesheet'>
+    <script src='https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js'></script>
+
+</head>
+<body>
+<div></div>
+
+<div class="listgoal"> <h2> To do</h2> 
+        <div class="bgoals" contenteditable="true">
+          <div class="first" id="first"> <p value="John"> A work goal </p>  </div>
+         <div class="second" id="second">  <p value="John">  A work goal </p> </div>
+          <div class="third" id="third">  <p value="John"> A work goal </p> </div>
+        </div>
+        <div class="pgoals" contenteditable="true">
+         <div class="fourth" id="fourth"> <p value="John"> A personal goal </p>  </div>
+         <div class="fifth" id="fifth">  <p value="John"> A personal goal </p> </div>
+         <div class="six" id="six"> <p value="John"> A personal goal </p>  </div>
+         </div>
+        </div>
+        <div class="listgoal2"> <h2> Suggestions</h2> 
+            <div class="bgoals" >
+              <div class="first"> <p> A work goal </p>  </div>
+             <div class="second">  <p> A work goal </p> </div>
+              <div class="third">  <p> A work goal </p> </div>
+            </div>
+            <div class="pgoals" >
+             <div class="fourth"> <p> A personal goal </p>  </div>
+             <div class="fifth">  <p> A personal goal </p> </div>
+             <div class="six"> <p> A personal goal </p>  </div>
+             </div>
+            </div>
+    <div id="container" class="calendar-container"></div>
+    <div class="emotion">
+      <p class="how" >How did you feel today?</P>
+     </div>
+     <div id=moodScale class=faces>
+    <div id=1 class="uno" >
+<h4> 1 </h4>
+    </div>
+    <div id=2 class="dos" >
+            <h4> 2 </h4>
+    </div>
+    <div id=3 class="tres" >
+            <h4> 3 </h4>
+    </div>
+    <div id=4 class="cuatro" >
+            <h4> 4 </h4>
+    </div>
+    <div id=5 class="cinco" >
+            <h4> 5 </h4>
+    </div>
+    <div id=6 class="seis" >
+             <h4> 6 </h4>
+    </div>
+    </div>
+ <div class="curve" id=curve_chart   >
+    </div>
+    <br>
+     <br>
+     <br>
+     <br>
+
+     <p><div class="chartjs-wrapper"><canvas id="chartjs-4" class="chartjs" ></canvas></div></p>
+<div style="align-content: center; text-align: center;" >
+  <iframe scrolling="no" width="800" height="800" frameborder="0" display:block; src="http://172.20.10.3/">
+  </iframe> 
+</div>
+
+<!-- The core Firebase JS SDK is always required and must be listed first -->
+<script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+     https://firebase.google.com/docs/web/setup#available-libraries -->
+<script src="https://www.gstatic.com/firebasejs/7.5.2/firebase-analytics.js"></script>
+
+<script>
+  // Your web app's Firebase configuration
+  var firebaseConfig = {
+    apiKey: "AIzaSyBFcG4TKALlhjHSlxZah3FYuV1W6T0XpK4",
+    authDomain: "my-notes-ed68d.firebaseapp.com",
+    databaseURL: "https://my-notes-ed68d.firebaseio.com",
+    projectId: "my-notes-ed68d",
+    storageBucket: "my-notes-ed68d.appspot.com",
+    messagingSenderId: "163843457418",
+    appId: "1:163843457418:web:de394603d9c272c56cc873",
+    measurementId: "G-VPCCB03QMK"
+  };
+  // Initialize Firebase
+  firebase.initializeApp(firebaseConfig);
+  firebase.analytics();
+</script>
+
+</body>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+<script src='scripts/data.js'></script>
+<script src="scripts/chart.js"></script>
+<script src="scripts/util.js"></script>
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js"
+            integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
+            crossorigin="anonymous"></script>
+    <script src="jquery.simple-calendar.js"></script>
+    <script src="lib/moment/moment.min.js"> </script>
+    <script>
+        $(document).ready(function(){
+            $("#container").simpleCalendar({
+                fixedStartDay: false
+            });
+        });
+    </script>
+
+<script> 
+// scripts for chart js data 
+Chart.defaults.global.defaultFontFamily = "";
+var ctx = document.getElementById('chartjs-4').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+        labels: ["1", "2", "3", "4", "5", "6"],
+        datasets: [{
+            label: '# of Votes',
+            data: [10, 10, 10, 10, 10, 10],
+            backgroundColor: [
+            '#ED1C24', '#F68B1F', '#E7E116','#57B947','#4D6DB4','#5B4EA0', 
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 0)',
+                'rgba(54, 162, 235, 0)',
+                'rgba(255, 206, 86, 0)',
+                'rgba(75, 192, 192, 0)',
+                'rgba(153, 102, 255, 0)',
+                'rgba(255, 159, 64, 0)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+    responsive: true,
+    backgroundColor: { fill:'transparent' },
+    }
+});
+// scripts for div button click update chart 
+
+$(".uno").on( "click", function(event) {
+    myChart.data.datasets[0].data[0] ++; 
+    myChart.update();
+});
+$(".dos").on( "click", function(event) {
+    myChart.data.datasets[0].data[1] ++; 
+    myChart.update();
+});
+$(".tres").on( "click", function(event) {
+    myChart.data.datasets[0].data[2] ++; 
+    myChart.update();
+});
+$(".cuatro").on( "click", function(event) {
+    myChart.data.datasets[0].data[3] ++; 
+    myChart.update();
+});
+$(".cinco").on( "click", function(event) {
+    myChart.data.datasets[0].data[4] ++; 
+    myChart.update();
+});
+$(".seis").on( "click", function(event) {
+    myChart.data.datasets[0].data[5] ++; 
+    myChart.update();
+});
+</script>
+</html>
+<script>
+    // google chart setup scripts 
+    google.charts.load('current', {
+    'packages': ['corechart']
+  });
+  google.charts.setOnLoadCallback(drawChart);
+  function drawChart() {
+    var data = google.visualization.arrayToDataTable(dataPoints);
+    var options = {
+      // title: 'Mood Chart',
+      curveType: 'function',
+      chartArea: {
+        // leave room for y-axis labels
+        width: '94%'
+      },
+      legend: {
+        position: 'bottom',
+      },
+      backgroundColor: { fill:'transparent' },
+     height: 500,
+      height: 500,
+      width: 1000,
+      alignment: 'left',
+      lineWidth: 2,
+      pointSize: 10,
+      dataOpacity: 1,
+      hAxis: {
+        textStyle: { color: 'black', 
+                     fontName: 'Helvetica', 
+                     fontSize: '20' },
+        
+        title: 'Date',
+        slantedText: 'true',
+        gridlines: {
+          count: -1
+        }
+      },
+      vAxis: {
+        textStyle: { color: 'black', 
+                     fontName: 'Helvetica', 
+                     fontSize: '20' },
+      
+        maxValue: 6,
+        minValue: 1,
+        gridlines: {
+          count: -1
+        }
+      }
+    };
+    var chart = new google.visualization.LineChart(document.getElementById('curve_chart'));
+    chart.draw(data, options);
+  }
+</script>
+<script>
+    //scripts for data of google chart 
+    var dataPoints = [
+    ['Date', 'Level'],
+    ['1/4/2016', 3],
+    ['1/5/2016', 3],
+    ['1/6/2016', 4],
+    ['1/7/2016', 1],
+    ['1/9/2016', 4],
+    ['1/11/2016', 6],
+    ['1/12/2016', 2],
+    ['1/13/2016', 3],
+    ['1/14/2016', 5],
+    ['1/16/2016', 2],
+    ['1/18/2016', 2],
+    ['1/20/2016', 3],
+    ['1/23/2016', 6],
+    ['1/25/2016', 4],
+    ['1/27/2016', 4],
+    ['1/30/2016', 1]
+  ];
+  var date = new Date();
+  var day = date.getDate();
+  var month = date.getMonth() + 1;
+  var year = date.getFullYear();
+  var fullDate = (month + "/" + day + "/" + year);
+  var scores = dataPoints.filter(function(dataPoint) {
+      return Number.isInteger(dataPoint[1]);
+    })
+    .map(function(dataPoint) {
+      return dataPoint[1];
+    });
+  calculateAverage(scores);
+  function calculateAverage(numbers) {
+    var sum = numbers.reduce(function(a, b) {
+      return a + b;
+    });
+    var average = (sum / numbers.length).toFixed(1);
+    $('#avg').html(average);ß
+    return average;
+  }
+</script>
+<script>
+    // scripts for updating moodscale google chart with button click 
+    $(function() {
+    // refactor to create a generic function that takes the value of each image and puts the value in the input box
+    $('#moodScale').click(function(event) {
+      var targetId = parseInt(event.target.id);
+      console.log('the value is ' + event.target.id);
+      var newDataPoint = $.makeArray([fullDate, targetId]);
+      console.log(newDataPoint);
+      (dataPoints).push(newDataPoint);
+      drawChart();
+      calculateAverage(scores);
+    });
+    if ($(window).height() > $(window).width()) {
+      console.log('This device is in portrait mode.');
+      $('#curve_chart').hide();
+    } else {
+      console.log('This device is in landscape mode.');
+    }
+  });
+    </script>
+
+ <script> 
+ 
+ var contentEditableElement = document.querySelector('[contenteditable]');
+  var localStorageKey = 'contenteditable';
+  var debounceTimeout = 1000;
+  function load() {
+    var saved = localStorage.getItem(localStorageKey);
+    if (saved) {
+      contentEditableElement.innerHTML = saved;
+      console.log('Your content just loaded from localstorage.')
+    }
+  }
+  function save() {
+    var html = contentEditableElement.innerHTML;
+    localStorage.setItem(localStorageKey, html);
+    console.log('Your content just saved to localstorage.');
+  }
+  function debounced(delay, fn) {
+    var timerId;
+    return function () {
+      if (timerId) {
+        clearTimeout(timerId);
+      }
+      timerId = setTimeout(function () {
+        fn();
+        timerId = null;
+      }, delay);
+    }
+  }
+  var debouncedSave = debounced(debounceTimeout, save);
+  load();
+  contentEditableElement.addEventListener('input', function() {
+    debouncedSave();
+  }, false);
+ </script>
+
+<!-- <script>
+window.somevarname = myChart.data.datasets[0].data;
+localStorage.setItem(window.somevarname);
+// Second method
+localStorage.VARIABLE_NAME = 'VARIABLE_CONTENT';
+localStorage.getItem('VARIABLE_NAME');
+// or
+localStorage.VARIABLE_NAME;
+localStorage.setItem('VARIABLE_NAME', JSON.stringify(JS_OBJECT));
+</script>
+ -->
+
+</style>   
+
+<script>
+var mycolor;
+var numLeafs = 9;
+var colorArray;
+var rotateInterval = 6000;
+function setup() {
+loadColor = [ color(255, 255, 255),color(255, 255, 255),color(255, 255, 255),color(255, 255, 255),color(255, 255, 255),color(255, 255, 255),color(255, 255, 255),color(255, 255, 255),color(255, 255, 255)];
+colorArray = [color(98, 39, 93), color(254, 186, 79), color(255, 234, 127), color(137, 224, 119), color(131, 195, 255), color(195, 129, 253), 
+color(103, 209, 32), color(195, 44, 87), color(46, 111, 204)];
+createCanvas(windowWidth, windowHeight);
+}
+function draw() {
+  background(40,0);
+  noStroke();
+  for (var i = 0; i < numLeafs; i++) {
+    push();
+    translate(width / 2, height / 2);
+    if (millis() < rotateInterval) {
+      fill(loadColor[i]);
+      rotate(radians( i * 360 / numLeafs));
+        smooth();
+      ellipse(0, -200, 75, 170);
+      pop();
+    } else{
+        fill(colorArray[i]);  
+        rotate(radians(   i * 360 / numLeafs));
+        smooth();
+        ellipse(0, -200, 75, 170);
+      pop();
+    }
+  } 
+  }
+function mousePressed() {
+  console.log(get(mouseX, mouseY));
+  var newColor = get(mouseX, mouseY);
+  var urlString = 'setcolor?pixel_num=1&red=' + newColor[0] + '&grn=' + newColor[1] + '&blu=' + newColor[2];
+    var displayString = newColor[0]+','+newColor[1]+','+newColor[2];
+    $('.currentColor').html(displayString);
+  $.ajax({
+    url: urlString 
+  })
+    .done(function( data ) {
+      console.log($(data).filter('pre').text());
+      let newText=$(data).filter('pre').text();
+  });   
+}
+function windowResized() {
+  resizeCanvas(displayWidth, displayHeight);
+}
+
+</script>
+
+
